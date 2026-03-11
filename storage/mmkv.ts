@@ -1,5 +1,4 @@
-import { MMKV } from 'react-native-mmkv';
+import { MMKV, createMMKV } from 'react-native-mmkv';
 
-export const storage = new MMKV({
-  id: 'hourly-sog-app',
-});
+
+export const storage: MMKV = createMMKV({ id: 'hourly-sog-app' });

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, DeviceEventEmitter } from 'react-native';
-import { cacheImages } from "@/storage/Images";
+import { cacheImages } from "@/storage/images";
 
 const DownloadBar = () => {
 	const [progress, setProgress] = useState(0);
@@ -8,7 +8,7 @@ const DownloadBar = () => {
 	const [status, setStatus] = useState({ current: 0, total: 0 });
 
 	useEffect(() => {
-		// Listen for the global event from Images.ts
+		// Listen for the global event from images.ts
 		const subscription = DeviceEventEmitter.addListener(
 			'onImageCacheProgress',
 			({ current, total }: { current: number; total: number }) => {
