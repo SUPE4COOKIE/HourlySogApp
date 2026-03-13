@@ -1,9 +1,14 @@
-import { Text, View, Button, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator } from "react-native";
+import { Text, View, Button, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator} from "react-native";
 import { useUpdateSogs, checkForUpdate } from "@/hooks/updateSogs";
 import { storage } from "@/storage/mmkv";
 import { clearImageCache } from "@/storage/images";
 import DownloadBar from "@/components/downloadBar";
 import { useState, useEffect } from "react";
+import { HelloWidget } from "@/widgets/HelloWidget";
+import { WidgetPreview, registerWidgetTaskHandler } from "react-native-android-widget";
+
+
+
 
 /*
 (checkforupdate -> if new images exist, show update button)
@@ -63,6 +68,12 @@ export default function Index() {
         <TouchableOpacity onPress={clearCache} style={styles.clearCacheButton}>
           <Text style={styles.clearCacheText}>Clear Cache</Text>
         </TouchableOpacity>
+		<WidgetPreview
+        renderWidget={() => <HelloWidget />}
+        width={320}
+        height={200}
+		
+      />
         <ScrollView style={styles.cacheList}>
           {cachedKeys.length === 0
             ? <></>
