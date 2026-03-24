@@ -1,10 +1,9 @@
 import React from 'react';
 import type { WidgetTaskHandlerProps } from 'react-native-android-widget';
-import { HelloWidget } from './HelloWidget';
+import { SoggyWidget, ClickSoggy } from './SoggyWidget';
 
 const nameToWidget = {
-  // Hello will be the **name** with which we will reference our widget.
-  Hello: HelloWidget,
+  SoggyCat: SoggyWidget,
 };
 
 export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
@@ -18,11 +17,11 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
       break;
 
     case 'WIDGET_UPDATE':
-      // Not needed for now
+      props.renderWidget(<Widget />);
       break;
 
     case 'WIDGET_RESIZED':
-      // Not needed for now
+      props.renderWidget(<Widget />);
       break;
 
     case 'WIDGET_DELETED':
@@ -30,7 +29,10 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
       break;
 
     case 'WIDGET_CLICK':
-      // Not needed for now
+      if (props.clickAction === 'SOGGY_CLICKED') {
+        ClickSoggy();
+        props.renderWidget(<Widget />);
+      }
       break;
 
     default:

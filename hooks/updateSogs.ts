@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { cacheImages } from '../storage/images';
+import { cacheImages } from '../storage/Images';
 import { storage } from '../storage/mmkv';
 
 const IMAGES_JSON_URL = 'https://mirror.guweh.com/images.json';

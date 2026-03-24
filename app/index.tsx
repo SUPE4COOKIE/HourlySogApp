@@ -1,10 +1,10 @@
 import { Text, View, Button, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator} from "react-native";
 import { useUpdateSogs, checkForUpdate } from "@/hooks/updateSogs";
 import { storage } from "@/storage/mmkv";
-import { clearImageCache } from "@/storage/images";
+import { clearImageCache } from "@/storage/Images";
 import DownloadBar from "@/components/downloadBar";
 import { useState, useEffect } from "react";
-import { HelloWidget } from "@/widgets/HelloWidget";
+import { SoggyWidget } from "@/widgets/SoggyWidget";
 import { WidgetPreview, registerWidgetTaskHandler } from "react-native-android-widget";
 
 
@@ -69,9 +69,9 @@ export default function Index() {
           <Text style={styles.clearCacheText}>Clear Cache</Text>
         </TouchableOpacity>
 		<WidgetPreview
-        renderWidget={() => <HelloWidget />}
-        width={320}
-        height={200}
+        renderWidget={() => <SoggyWidget />}
+        width={200}
+        height={300}
 		
       />
         <ScrollView style={styles.cacheList}>
