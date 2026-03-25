@@ -3,7 +3,7 @@ import React from 'react';
 import { ToastAndroid } from 'react-native';
 import { FlexWidget, TextWidget, ImageWidget } from 'react-native-android-widget';
 import { storage } from "@/storage/mmkv";
-import { Paths } from 'expo-file-system/next';
+import { Paths, File } from 'expo-file-system/next';
 import seedrandom from 'seedrandom';
 
 function getSyncRandomness(min: number, max: number): number {
@@ -15,6 +15,15 @@ function getSyncRandomness(min: number, max: number): number {
 
   // return seeded prng in range of min and max
   return Math.floor(rng() * (max - min + 1)) + min;
+}
+
+function superRandomSoggy() {
+  const keys = storage.getAllKeys();
+  if (keys.length === 0) {
+    return null;
+  }
+  const randomIndex = Math.floor(Math.random() * keys.length);
+  return keys[randomIndex];
 }
 
 function getRandomSoggyImage(): string | null {
@@ -32,12 +41,14 @@ function ClickSoggy() {
   ToastAndroid.show('Meow! Soggy clicked!', ToastAndroid.SHORT);
 }
 
-function SoggyWidget() {
-  const randomKey = getRandomSoggyImage();
-  let imagePath = require('../assets/widget-preview/soggy.png');
+function SoggyWidget({ forceSuperRandom }: { forceSuperRandom?: boolean }) {
+  // If forced because it was clicked, we skip the hourly seed and use a truly random image
+  const randomKey = forceSuperRandom ? superRandomSoggy() : getRandomSoggyImage();
+  let imagePath: any = require('../assets/widget-preview/soggy.png');
 
   if (randomKey) {
-    imagePath = require(`${Paths.document.uri}/${randomKey}`);
+    const file = new File(Paths.document, randomKey);
+    imagePath = file.uri as any;
   }
 
   return (

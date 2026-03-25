@@ -31,7 +31,8 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
     case 'WIDGET_CLICK':
       if (props.clickAction === 'SOGGY_CLICKED') {
         ClickSoggy();
-        props.renderWidget(<Widget />);
+        // Since we caught a click event, actively pass forceSuperRandom prop to render a totally new cat
+        props.renderWidget(<Widget forceSuperRandom={true} />);
       }
       break;
 
