@@ -3,16 +3,28 @@ import React from 'react';
 import { ToastAndroid } from 'react-native';
 import { FlexWidget, TextWidget, ImageWidget } from 'react-native-android-widget';
 import { storage } from "@/storage/mmkv";
-
-/*select random image from mmkv and then use it as the widget image*/
+import { Paths } from 'expo-file-system/next';
+import seedrandom from 'seedrandom';
 
 function getSyncRandomness(min: number, max: number): number {
-  return (1);
+  const now = Date.now();
+  // round to nearest hour
+  const msHour = 60 * 60 * 1000;
+  const rounded = Math.floor(now / msHour) * msHour;
+  const rng = seedrandom.alea(rounded.toString());
+
+  // return seeded prng in range of min and max
+  return Math.floor(rng() * (max - min + 1)) + min;
 }
 
 function getRandomSoggyImage(): string | null {
   const keys = storage.getAllKeys();
-  return (null);
+  if (keys.length === 0) {
+    return null;
+  }
+  
+  const randomIndex = getSyncRandomness(0, keys.length - 1);
+  return keys[randomIndex];
 }
 
 function ClickSoggy() {
@@ -21,6 +33,13 @@ function ClickSoggy() {
 }
 
 function SoggyWidget() {
+  const randomKey = getRandomSoggyImage();
+  let imagePath = require('../assets/widget-preview/soggy.png');
+
+  if (randomKey) {
+    imagePath = require(`${Paths.document.uri}/${randomKey}`);
+  }
+
   return (
     <FlexWidget
       style={{
@@ -35,7 +54,7 @@ function SoggyWidget() {
       clickAction="SOGGY_CLICKED"
     >
       <ImageWidget
-        image={require('../assets/widget-preview/soggy.png')}
+        image={imagePath}
         imageWidth={400}
         imageHeight={200}
       />
