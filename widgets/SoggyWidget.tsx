@@ -1,10 +1,11 @@
 'use no memo';
 import React from 'react';
-import { ToastAndroid } from 'react-native';
+import { Image, ToastAndroid } from 'react-native';
 import { FlexWidget, TextWidget, ImageWidget, WidgetTaskHandlerProps } from 'react-native-android-widget';
 import { storage } from "@/storage/mmkv";
 import { Paths, File } from 'expo-file-system/next';
 import seedrandom from 'seedrandom';
+import getBestFit, { getImageDimensions } from '@/tools/ImageSize';
 
 function getSyncRandomness(min: number, max: number): number {
   const now = Date.now();
@@ -42,15 +43,24 @@ function ClickSoggy(props: WidgetTaskHandlerProps) {
   console.log(props.widgetInfo);
 }
 
-function SoggyWidget({ forceSuperRandom }: { forceSuperRandom?: boolean }) {
-  // If forced because it was clicked, we skip the hourly seed and use a truly random image
-  const randomKey = forceSuperRandom ? superRandomSoggy() : getRandomSoggyImage();
+export function openSoggyImage(randomKey: string | null) {
   let imagePath: any = require('../assets/widget-preview/soggy.png');
-
   if (randomKey) {
     const file = new File(Paths.document, randomKey);
     imagePath = file.uri as any;
   }
+  return imagePath;
+}
+
+function SoggyWidget({ widgetInfo, imagePath, originalWidth, originalHeight }: { widgetInfo?: any, imagePath?: any, originalWidth?: number, originalHeight?: number }) {
+  const widgetWidth = widgetInfo?.width || 400;
+  const widgetHeight = widgetInfo?.height || 600;
+
+  const safeImagePath = imagePath || openSoggyImage(null);
+  const safeOriginalWidth = originalWidth || 400;
+  const safeOriginalHeight = originalHeight || 600;
+
+  const { width, height } = getBestFit(safeOriginalWidth, safeOriginalHeight, widgetWidth, widgetHeight);
 
   return (
     <FlexWidget
@@ -59,19 +69,19 @@ function SoggyWidget({ forceSuperRandom }: { forceSuperRandom?: boolean }) {
         width: 'match_parent',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#ffffff',
+        backgroundColor: '#00000000',
         borderRadius: 16,
       }}
       accessibilityLabel="Soggy Widget"
       clickAction="SOGGY_CLICKED"
     >
       <ImageWidget
-        image={imagePath}
-        imageWidth={400}
-        imageHeight={600}
+        image={safeImagePath}
+        imageWidth={width}
+        imageHeight={height}
       />
     </FlexWidget>
   );
 }
 
-export {SoggyWidget, ClickSoggy};
+export {SoggyWidget, ClickSoggy, superRandomSoggy, getRandomSoggyImage};
