@@ -1,7 +1,7 @@
 'use no memo';
 import React from 'react';
 import { ToastAndroid } from 'react-native';
-import { FlexWidget, TextWidget, ImageWidget } from 'react-native-android-widget';
+import { FlexWidget, TextWidget, ImageWidget, WidgetTaskHandlerProps } from 'react-native-android-widget';
 import { storage } from "@/storage/mmkv";
 import { Paths, File } from 'expo-file-system/next';
 import seedrandom from 'seedrandom';
@@ -36,9 +36,10 @@ function getRandomSoggyImage(): string | null {
   return keys[randomIndex];
 }
 
-function ClickSoggy() {
+function ClickSoggy(props: WidgetTaskHandlerProps) {
   console.log('Soggy clicked!');
   ToastAndroid.show('Meow! Soggy clicked!', ToastAndroid.SHORT);
+  console.log(props.widgetInfo);
 }
 
 function SoggyWidget({ forceSuperRandom }: { forceSuperRandom?: boolean }) {
@@ -67,7 +68,7 @@ function SoggyWidget({ forceSuperRandom }: { forceSuperRandom?: boolean }) {
       <ImageWidget
         image={imagePath}
         imageWidth={400}
-        imageHeight={200}
+        imageHeight={600}
       />
     </FlexWidget>
   );
