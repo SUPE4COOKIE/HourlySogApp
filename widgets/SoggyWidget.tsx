@@ -37,10 +37,10 @@ function getRandomSoggyImage(): string | null {
   return keys[randomIndex];
 }
 
-function ClickSoggy(props: WidgetTaskHandlerProps) {
+function ClickSoggy(props: any) {
   console.log('Soggy clicked!');
   ToastAndroid.show('Meow! Soggy clicked!', ToastAndroid.SHORT);
-  console.log(props.widgetInfo);
+  console.log(props);
 }
 
 export function openSoggyImage(randomKey: string | null) {
