@@ -1,20 +1,19 @@
-import { Text, View, Button, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator} from "react-native";
+import { Text, View, Button, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator, ToastAndroid } from "react-native";
 import { useUpdateSogs, checkForUpdate } from "@/hooks/updateSogs";
 import { storage } from "@/storage/mmkv";
 import { clearImageCache } from "@/storage/Images";
 import DownloadBar from "@/components/downloadBar";
 import { useState, useEffect } from "react";
-import { SoggyWidget } from "@/widgets/SoggyWidget";
-import { WidgetPreview, registerWidgetTaskHandler } from "react-native-android-widget";
-
-
-
+import { SoggyWidget, updateSuperRandomWidget, updateRandomWidget } from "@/widgets/SoggyWidget";
+import { WidgetPreview } from "react-native-android-widget";
+import RNAlarmScheduler from 'react-native-alarm-scheduler';
+import { setNextHourAlarm } from "@/tools/scheduler";
 
 /*
 (checkforupdate -> if new images exist, show update button)
 updatesogs -> fetches images.json
-	-> cacheImages -> for each image, check if it's in MMKV, if not download and save to MMKV
-		-> DownloadBar listens for global events from cacheImages to update progress
+  -> cacheImages -> for each image, check if it's in MMKV, if not download and save to MMKV
+    -> DownloadBar listens for global events from cacheImages to update progress
 */
 
 export default function Index() {
@@ -29,22 +28,49 @@ export default function Index() {
     });
   }, []);
 
+  useEffect(() => {
+    const setAlarms = async () => {
+      await updateRandomWidget();
+      const alarms = await RNAlarmScheduler.listAlarms();
+      if (alarms && alarms.length > 0) {
+        console.log('Clearing existing alarms...');
+        const tasks = alarms.map(alarm => RNAlarmScheduler.cancelAlarm(alarm.id));
+        await Promise.all(tasks);
+      }
+      console.log('Setting next hour alarm.');
+      await setNextHourAlarm();
+    };
+    setAlarms();
+  }, []);
+
   const showCache = () => {
     setCachedKeys(storage.getAllKeys());
   };
 
   const hideCache = () => {
-	setCachedKeys([]);
+    setCachedKeys([]);
   }
 
   const clearCache = () => {
-	clearImageCache();
-	setCachedKeys([]);
-	setNeedUpdate(true);
+    clearImageCache();
+    setCachedKeys([]);
+    setNeedUpdate(true);
   }
 
+  const getLocalISOString = (date: Date): string => {
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+  };
+
+  const getSoonISOString = (): string => {
+    const soonDate = new Date(Date.now() + 10_000);
+    const soon = getLocalISOString(soonDate);
+    console.log('Scheduling alarm for:', soon);
+    return soon;
+  };
+
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <DownloadBar />
 
       <TouchableOpacity
@@ -56,8 +82,8 @@ export default function Index() {
         {isLoading
           ? <ActivityIndicator color="#fff" size="small" />
           : <Text style={styles.updateButtonText}>
-              {needUpdate === null ? "Checking..." : needUpdate ? "Update Sogs" : "No Updates Available"}
-            </Text>
+            {needUpdate === null ? "Checking..." : needUpdate ? "Update Sogs" : "No Updates Available"}
+          </Text>
         }
       </TouchableOpacity>
 
@@ -65,25 +91,40 @@ export default function Index() {
 
       <View style={styles.debugSection}>
         <Button title="Show image cache" onPress={cachedKeys.length == 0 ? showCache : hideCache} />
+
+        <TouchableOpacity onPress={updateSuperRandomWidget} style={styles.actionButton}>
+          <Text style={styles.actionButtonText}>Update SuperRandom Widget</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity onPress={clearCache} style={styles.clearCacheButton}>
           <Text style={styles.clearCacheText}>Clear Cache</Text>
         </TouchableOpacity>
-		<WidgetPreview
-        renderWidget={() => <SoggyWidget />}
-        width={200}
-        height={300}
-		
-      />
+
+        <TouchableOpacity onPress={() => RNAlarmScheduler.scheduleAlarm({
+          id: 'test-soon',
+          datetimeISO: getSoonISOString(),
+          title: 'Test',
+          body: '',
+        })} style={styles.actionButton}>
+          <Text style={styles.actionButtonText}>Schedule Alarm</Text>
+        </TouchableOpacity>
+
+        <WidgetPreview
+          renderWidget={() => <SoggyWidget />}
+          width={200}
+          height={300}
+
+        />
         <ScrollView style={styles.cacheList}>
           {cachedKeys.length === 0
             ? <></>
             : cachedKeys.map(key => (
-                <Text key={key} style={styles.cacheKey}>{key}</Text>
-              ))
+              <Text key={key} style={styles.cacheKey}>{key}</Text>
+            ))
           }
         </ScrollView>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -129,12 +170,23 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 15,
   },
+  actionButton: {
+    marginTop: 8,
+    backgroundColor: '#10b981',
+    padding: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  actionButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
   clearCacheButton: {
-	marginTop: 8,
-	backgroundColor: '#db3636',
-	padding: 10,
-	borderRadius: 8,
-	alignItems: 'center',
+    marginTop: 8,
+    backgroundColor: '#db3636',
+    padding: 10,
+    borderRadius: 8,
+    alignItems: 'center',
   },
   clearCacheText: {
     color: '#fff',

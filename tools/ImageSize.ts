@@ -15,7 +15,7 @@ export default function getBestfit(imgWidth: number, imgHeight: number, widgetWi
 		newWidth = widgetHeight * imgAspectRatio;
 	}
 
-	return { width: newWidth, height: newHeight };
+	return { width: Math.round(newWidth), height: Math.round(newHeight) };
 
 }
 

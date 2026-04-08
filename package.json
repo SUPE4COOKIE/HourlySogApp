@@ -40,7 +40,9 @@
     "react-native-screens": "~4.16.0",
     "react-native-web": "~0.21.0",
     "react-native-worklets": "0.5.1",
-    "seedrandom": "^3.0.5"
+    "seedrandom": "^3.0.5",
+    "react-native-alarm-scheduler": "https://github.com/SUPE4COOKIE/react-native-alarm-scheduler"
+
   },
   "devDependencies": {
     "@types/react": "~19.1.0",

@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { cacheImages } from '../storage/Images';
 import { storage } from '../storage/mmkv';
+import { updateRandomWidget } from '@/widgets/SoggyWidget';
 
 const IMAGES_JSON_URL = 'https://mirror.guweh.com/images.json';
 
@@ -25,6 +26,8 @@ const useUpdateSogs = () => {
 			await cacheImages(imagePaths, (current, total) => {
 				setProgress({ current, total });
 			});
+			
+			await updateRandomWidget();
 		} catch (e) {
 			setError(e instanceof Error ? e.message : 'Unknown error');
 		} finally {

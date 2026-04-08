@@ -1,7 +1,7 @@
 'use no memo';
 import React from 'react';
 import { Image, ToastAndroid } from 'react-native';
-import { FlexWidget, TextWidget, ImageWidget, WidgetTaskHandlerProps } from 'react-native-android-widget';
+import { FlexWidget, TextWidget, ImageWidget, requestWidgetUpdate } from 'react-native-android-widget';
 import { storage } from "@/storage/mmkv";
 import { Paths, File } from 'expo-file-system/next';
 import seedrandom from 'seedrandom';
@@ -52,6 +52,58 @@ export function openSoggyImage(randomKey: string | null) {
   return imagePath;
 }
 
+const updateSuperRandomWidget = async () => {
+    const randomKey = superRandomSoggy();
+    const imagePath = openSoggyImage(randomKey);
+
+    let originalWidth = 400;
+    let originalHeight = 600;
+
+    try {
+      if (typeof imagePath === 'string' && imagePath.startsWith('file://')) {
+        const dimensions = await getImageDimensions(imagePath);
+        originalWidth = dimensions.width;
+        originalHeight = dimensions.height;
+      }
+    } catch (error) {
+      console.log("Failed to get image size", error);
+    }
+
+    requestWidgetUpdate({
+      widgetName: 'SoggyCat',
+      renderWidget: (widgetInfo) => <SoggyWidget widgetInfo={widgetInfo} imagePath={imagePath} originalWidth={originalWidth} originalHeight={originalHeight} />,
+      widgetNotFound: () => {
+        console.log('Widget not found');
+      }
+    });
+  };
+
+const updateRandomWidget = async () => {
+  const randomKey = getRandomSoggyImage();
+    const imagePath = openSoggyImage(randomKey);
+
+    let originalWidth = 400;
+    let originalHeight = 600;
+
+    try {
+      if (typeof imagePath === 'string' && imagePath.startsWith('file://')) {
+        const dimensions = await getImageDimensions(imagePath);
+        originalWidth = dimensions.width;
+        originalHeight = dimensions.height;
+      }
+    } catch (error) {
+      console.log("Failed to get image size", error);
+    }
+
+    requestWidgetUpdate({
+      widgetName: 'SoggyCat',
+      renderWidget: (widgetInfo) => <SoggyWidget widgetInfo={widgetInfo} imagePath={imagePath} originalWidth={originalWidth} originalHeight={originalHeight} />,
+      widgetNotFound: () => {
+        console.log('Widget not found');
+      }
+    });
+};
+
 function SoggyWidget({ widgetInfo, imagePath, originalWidth, originalHeight }: { widgetInfo?: any, imagePath?: any, originalWidth?: number, originalHeight?: number }) {
   const widgetWidth = widgetInfo?.width || 400;
   const widgetHeight = widgetInfo?.height || 600;
@@ -79,9 +131,13 @@ function SoggyWidget({ widgetInfo, imagePath, originalWidth, originalHeight }: {
         image={safeImagePath}
         imageWidth={width}
         imageHeight={height}
+        style={{
+          width: width,
+          height: height,
+        }}
       />
     </FlexWidget>
   );
 }
 
-export {SoggyWidget, ClickSoggy, superRandomSoggy, getRandomSoggyImage};
+export {SoggyWidget, ClickSoggy, superRandomSoggy, getRandomSoggyImage, updateSuperRandomWidget, updateRandomWidget};

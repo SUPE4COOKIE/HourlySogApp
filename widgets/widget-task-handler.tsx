@@ -2,6 +2,7 @@ import React from 'react';
 import type { WidgetTaskHandlerProps } from 'react-native-android-widget';
 import { SoggyWidget, ClickSoggy, superRandomSoggy, getRandomSoggyImage, openSoggyImage } from './SoggyWidget';
 import { getImageDimensions } from '@/tools/ImageSize';
+import { setNextHourAlarm } from '@/tools/scheduler';
 
 const nameToWidget = {
   SoggyCat: SoggyWidget,
@@ -39,10 +40,12 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
   switch (props.widgetAction) {
     case 'WIDGET_ADDED':
       props.renderWidget(<Widget {...widgetProps} />);
+      setNextHourAlarm();
       break;
 
     case 'WIDGET_UPDATE':
       props.renderWidget(<Widget {...widgetProps} />);
+      setNextHourAlarm();
       break;
 
     case 'WIDGET_RESIZED':
