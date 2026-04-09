@@ -1,50 +1,40 @@
-# Welcome to your Expo app 👋
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+# Hourly Sog App
 
-## Get started
+This app aims at providing a synchronised random offline 
+soggy cat every hour Widget, to do so it use a predicive seed for a PRNG algorithm .
 
-1. Install dependencies
 
-   ```bash
-   npm install
-   ```
+## Android status:
 
-2. Start the app
+- async downloads from mirror.guweh.com + updates checks
 
-   ```bash
-   npx expo start
-   ```
+- used MMKV to track already installed pictures that are stored in the cache
 
-In the output, you'll find options to open the app in a
+- Widgets implemented via react-native-android-widget library
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- used Alea algorithm from Johannes Baagøe re-seeded with UTC+0 hour timestamp at every generation
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- bypassed the limited widget updates using AlarmManager.setExactAndAllowWhileIdle() to wake a Headless JS task at precise XX:00 intervals, which then updates the widget. The implementation was partially done by a [small alarm library in Kotlin](https://github.com/SUPE4COOKIE/react-native-alarm-scheduler) which i reviewed and modified for this purpose
 
-## Get a fresh project
+## IOS status:
+i haven't already started the IOS implementation but downloads, cache managing and randomness should be cross platform
 
-When you're ready, run:
 
+
+
+
+## Building
+
+**Android:**
 ```bash
-npm run reset-project
+  git clone https://github.com/SUPE4COOKIE/HourlySogApp
+  cd HourlySogApp
+  npm install
+  npx expo prebuild --platform android 
+  cd android
+  ./gradlew assembleRelease # JDK version must be 17
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
 
-## Learn more
 
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
