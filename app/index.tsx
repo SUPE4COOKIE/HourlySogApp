@@ -1,13 +1,13 @@
 import { Text, View, Button, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator, ToastAndroid } from "react-native";
 import { useUpdateSogs, checkForUpdate } from "@/hooks/updateSogs";
+import { useSetAlarmsOnLaunch } from "@/hooks/useAlarms";
 import { storage } from "@/storage/mmkv";
 import { clearImageCache } from "@/storage/Images";
 import DownloadBar from "@/components/downloadBar";
 import { useState, useEffect } from "react";
-import { SoggyWidget, updateSuperRandomWidget, updateRandomWidget } from "@/widgets/SoggyWidget";
+import { SoggyWidget, updateSuperRandomWidget } from "@/widgets/SoggyWidget";
 import { WidgetPreview } from "react-native-android-widget";
 import RNAlarmScheduler from 'react-native-alarm-scheduler';
-import { setNextHourAlarm } from "@/tools/scheduler";
 
 /*
 (checkforupdate -> if new images exist, show update button)
@@ -28,20 +28,7 @@ export default function Index() {
     });
   }, []);
 
-  useEffect(() => {
-    const setAlarms = async () => {
-      await updateRandomWidget();
-      const alarms = await RNAlarmScheduler.listAlarms();
-      if (alarms && alarms.length > 0) {
-        console.log('Clearing existing alarms...');
-        const tasks = alarms.map(alarm => RNAlarmScheduler.cancelAlarm(alarm.id));
-        await Promise.all(tasks);
-      }
-      console.log('Setting next hour alarm.');
-      await setNextHourAlarm();
-    };
-    setAlarms();
-  }, []);
+  useSetAlarmsOnLaunch();
 
   const showCache = () => {
     setCachedKeys(storage.getAllKeys());
