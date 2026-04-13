@@ -1,6 +1,6 @@
 import { ToastAndroid } from 'react-native';
 import RNAlarmModule from 'react-native-alarm-scheduler';
-import { updateSuperRandomWidget, updateRandomWidget } from '@/widgets/SoggyWidget';
+import { updateRandomWidget } from '@/widgets/SoggyWidget';
 
 // Register the background function
 RNAlarmModule.registerAlarmHeadlessTask(async (taskData) => {

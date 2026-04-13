@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, DeviceEventEmitter } from 'react-native';
-import { cacheImages } from "@/storage/images";
+import { cacheImages } from "@/storage/Images";
 
 const DownloadBar = () => {
 	const [progress, setProgress] = useState(0);

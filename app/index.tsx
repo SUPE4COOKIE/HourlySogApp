@@ -1,12 +1,15 @@
-import { Text, View, Button, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator, ToastAndroid } from "react-native";
+import { Text, View, Button, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator, Switch } from "react-native";
 import { useUpdateSogs, checkForUpdate } from "@/hooks/updateSogs";
 import { useSetAlarmsOnLaunch } from "@/hooks/useAlarms";
-import { storage } from "@/storage/mmkv";
+import { useHasWidget } from "@/hooks/useHasWidget";
+import { useBatteryOptimisation } from "@/hooks/useBatteryOptimisation";
+import { storage, useDebugMode } from "@/storage/mmkv";
 import { clearImageCache } from "@/storage/Images";
 import DownloadBar from "@/components/downloadBar";
 import { useState, useEffect } from "react";
-import { SoggyWidget, updateSuperRandomWidget } from "@/widgets/SoggyWidget";
-import { WidgetPreview } from "react-native-android-widget";
+import { updateSuperRandomWidget } from "@/widgets/SoggyWidget";
+import WidgetPlacedHeader from "@/components/widgetPlacedHeader";
+import BatteryOptimisationHeader from "@/components/batteryOptimisationHeader";
 import RNAlarmScheduler from 'react-native-alarm-scheduler';
 
 /*
@@ -20,6 +23,9 @@ export default function Index() {
   const { updateSogs, isLoading, error } = useUpdateSogs();
   const [cachedKeys, setCachedKeys] = useState<string[]>([]);
   const [needUpdate, setNeedUpdate] = useState<boolean | null>(null);
+  const [isDebugEnabled, setDebugEnabled] = useDebugMode();
+  const hasWidget = useHasWidget();
+  const isOptimised = useBatteryOptimisation();
 
   useEffect(() => {
     checkForUpdate().then(result => {
@@ -60,6 +66,9 @@ export default function Index() {
     <ScrollView style={styles.container}>
       <DownloadBar />
 
+      <WidgetPlacedHeader hasWidget={hasWidget} />
+      <BatteryOptimisationHeader isOptimised={isOptimised} />
+
       <TouchableOpacity
         style={[styles.updateButton, (isLoading || !needUpdate) && styles.updateButtonDisabled]}
         onPress={async () => { await updateSogs(); setNeedUpdate(await checkForUpdate()); }}
@@ -76,41 +85,45 @@ export default function Index() {
 
       {error && <Text style={styles.error}>{error}</Text>}
 
-      <View style={styles.debugSection}>
-        <Button title="Show image cache" onPress={cachedKeys.length == 0 ? showCache : hideCache} />
-
-        <TouchableOpacity onPress={updateSuperRandomWidget} style={styles.actionButton}>
-          <Text style={styles.actionButtonText}>Update SuperRandom Widget</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={clearCache} style={styles.clearCacheButton}>
-          <Text style={styles.clearCacheText}>Clear Cache</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => RNAlarmScheduler.scheduleAlarm({
-          id: 'test-soon',
-          datetimeISO: getSoonISOString(),
-          title: 'Test',
-          body: '',
-        })} style={styles.actionButton}>
-          <Text style={styles.actionButtonText}>Schedule Alarm</Text>
-        </TouchableOpacity>
-
-        <WidgetPreview
-          renderWidget={() => <SoggyWidget />}
-          width={200}
-          height={300}
-
+      <View style={styles.debugSwitchContainer}>
+        <Text style={styles.debugSwitchText}>Enable Debug Mode</Text>
+        <Switch
+          value={isDebugEnabled ?? false}
+          onValueChange={(val) => setDebugEnabled(val)}
         />
-        <ScrollView style={styles.cacheList}>
-          {cachedKeys.length === 0
-            ? <></>
-            : cachedKeys.map(key => (
-              <Text key={key} style={styles.cacheKey}>{key}</Text>
-            ))
-          }
-        </ScrollView>
       </View>
+
+      {isDebugEnabled && (
+        <View style={styles.debugSection}>
+          <Button title="Show image cache" onPress={cachedKeys.length == 0 ? showCache : hideCache} />
+
+          <TouchableOpacity onPress={updateSuperRandomWidget} style={styles.actionButton}>
+            <Text style={styles.actionButtonText}>Update SuperRandom Widget</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={clearCache} style={styles.clearCacheButton}>
+            <Text style={styles.clearCacheText}>Clear Cache</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => RNAlarmScheduler.scheduleAlarm({
+            id: 'test-soon',
+            datetimeISO: getSoonISOString(),
+            title: 'Test',
+            body: '',
+          })} style={styles.actionButton}>
+            <Text style={styles.actionButtonText}>Schedule Alarm</Text>
+          </TouchableOpacity>
+
+          <ScrollView style={styles.cacheList}>
+            {cachedKeys.length === 0
+              ? <></>
+              : cachedKeys.map(key => (
+                <Text key={key} style={styles.cacheKey}>{key}</Text>
+              ))
+            }
+          </ScrollView>
+        </View>
+      )}
     </ScrollView>
   );
 }
@@ -125,6 +138,31 @@ const styles = StyleSheet.create({
   error: {
     color: 'red',
     marginTop: 12,
+  },
+  statusContainer: {
+    marginTop: 16,
+    padding: 12,
+    backgroundColor: '#222',
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  statusText: {
+    color: '#ddd',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  debugSwitchContainer: {
+    marginTop: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#333',
+  },
+  debugSwitchText: {
+    color: '#aaa',
+    fontSize: 16,
   },
   debugSection: {
     marginTop: 32,

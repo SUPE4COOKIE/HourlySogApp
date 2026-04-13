@@ -14,7 +14,7 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
     nameToWidget[widgetInfo.widgetName as keyof typeof nameToWidget];
 
   const superRandomSog = false;//props.clickAction === 'SOGGY_CLICKED';
-  const randomKey = superRandomSog ? superRandomSoggy() : getRandomSoggyImage();
+  const randomKey = getRandomSoggyImage();
   const imagePath = openSoggyImage(randomKey);
 
   let originalWidth = 400;
