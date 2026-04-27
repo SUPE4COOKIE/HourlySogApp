@@ -5,9 +5,7 @@ import { updateRandomWidget } from '@/widgets/SoggyWidget';
 // Register the background function
 RNAlarmModule.registerAlarmHeadlessTask(async (taskData) => {
     console.log("ALARM TRIGGERED IN BACKGROUND!", taskData);
-    ToastAndroid.show(`Alarm fired: ${taskData.id}`, ToastAndroid.LONG);
     await updateRandomWidget();
-    ToastAndroid.show(`Widget updated with new soggy cat!`, ToastAndroid.LONG);
     await setNextHourAlarm();
 });
 

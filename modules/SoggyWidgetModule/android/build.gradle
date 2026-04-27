@@ -1,0 +1,39 @@
+plugins {
+  id 'com.android.library'
+  id 'expo-module-gradle-plugin'
+}
+
+group = 'expo.modules.soggywidget'
+version = '0.7.10'
+
+android {
+  namespace "expo.modules.soggywidget"
+  defaultConfig {
+    versionCode 1
+    versionName "0.7.10"
+  }
+  lintOptions {
+    abortOnError false
+  }
+  buildFeatures {
+      compose true
+   }
+  composeOptions {
+      kotlinCompilerExtensionVersion = "1.5.15"
+   }
+   kotlinOptions {
+      jvmTarget = "1.8"
+   }
+}
+
+
+dependencies {
+   // For AppWidgets support
+   implementation "androidx.glance:glance-appwidget:1.1.1"
+
+   // For interop APIs with Material 3
+   implementation "androidx.glance:glance-material3:1.1.1"
+
+   // For interop APIs with Material 2
+   implementation "androidx.glance:glance-material:1.1.1"
+}

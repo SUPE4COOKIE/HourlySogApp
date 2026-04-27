@@ -1,0 +1,9 @@
+{
+  "platforms": ["apple", "android", "web"],
+  "apple": {
+    "modules": ["SoggyWidgetModule"]
+  },
+  "android": {
+    "modules": ["expo.modules.soggywidget.SoggyWidgetModule"]
+  }
+}
