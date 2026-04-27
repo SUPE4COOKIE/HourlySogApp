@@ -3,5 +3,5 @@
   "android": {
     "modules": ["expo.modules.soggywidget.SoggyWidgetModule"]
   },
-  "plugin": "./plugin/withSoggyWidget"
+  "plugin": "./plugins/withSoggyWidget"
 }

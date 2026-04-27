@@ -29,6 +29,7 @@
     },
     "plugins": [
       "expo-router",
+      "./modules/SoggyWidgetModule/plugins/withSoggyWidget.js" ,
       [
         "expo-splash-screen",
         {

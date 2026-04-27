@@ -1,59 +1,12 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:1:1-31:12
-INJECTED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:1:1-31:12
+ADDED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:2:1-4:12
+INJECTED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:2:1-4:12
 	package
+		ADDED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:3:5-39
 		INJECTED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml
 	xmlns:android
-		ADDED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:1:11-69
-uses-permission#android.permission.SCHEDULE_EXACT_ALARM
-ADDED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:3:5-79
-	android:name
-		ADDED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:3:22-76
-uses-permission#android.permission.RECEIVE_BOOT_COMPLETED
-ADDED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:4:5-81
-	android:name
-		ADDED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:4:22-78
-application
-ADDED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:6:5-29:19
-receiver#expo.modules.soggywidget.SoggyWidgetReceiver
-ADDED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:8:9-17:20
-	android:exported
-		ADDED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:10:13-36
-	android:name
-		ADDED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:9:13-72
-intent-filter#action:name:android.appwidget.action.APPWIDGET_UPDATE
-ADDED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:11:13-13:29
-action#android.appwidget.action.APPWIDGET_UPDATE
-ADDED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:12:17-84
-	android:name
-		ADDED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:12:25-81
-meta-data#android.appwidget.provider
-ADDED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:14:13-16:61
-	android:resource
-		ADDED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:16:17-58
-	android:name
-		ADDED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:15:17-58
-receiver#expo.modules.soggywidget.SoggyAlarmReceiver
-ADDED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:20:9-28:20
-	android:exported
-		ADDED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:22:13-36
-	android:name
-		ADDED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:21:13-71
-intent-filter#action:name:android.intent.action.BOOT_COMPLETED+action:name:android.intent.action.MY_PACKAGE_REPLACED+action:name:android.intent.action.QUICKBOOT_POWERON
-ADDED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:23:13-27:29
-action#android.intent.action.BOOT_COMPLETED
-ADDED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:24:17-79
-	android:name
-		ADDED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:24:25-76
-action#android.intent.action.MY_PACKAGE_REPLACED
-ADDED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:25:17-84
-	android:name
-		ADDED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:25:25-81
-action#android.intent.action.QUICKBOOT_POWERON
-ADDED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:26:17-82
-	android:name
-		ADDED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:26:25-79
+		ADDED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:2:11-69
 uses-sdk
 INJECTED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml

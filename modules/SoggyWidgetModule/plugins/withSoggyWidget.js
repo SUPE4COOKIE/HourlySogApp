@@ -1,21 +1,22 @@
-import { ConfigPlugin, withAndroidManifest } from '@expo/config-plugins';
+const { withAndroidManifest } = require('@expo/config-plugins');
 
-const withSoggyWidget: ConfigPlugin = (config) => {
+const withSoggyWidget = (config) => {
     return withAndroidManifest(config, (config) => {
         const manifest = config.modResults.manifest;
-        const app = manifest.application![0];
+        const app = manifest.application[0];
 
+        // 1. Add required permissions
         manifest['uses-permission'] = manifest['uses-permission'] || [];
         manifest['uses-permission'].push({ $: { 'android:name': 'android.permission.SCHEDULE_EXACT_ALARM' } });
         manifest['uses-permission'].push({ $: { 'android:name': 'android.permission.RECEIVE_BOOT_COMPLETED' } });
 
-        app.receiver = app.receiver ?? [];
+        app.receiver = app.receiver || [];
 
-        // Note the `any` cast here to bypass the Expo TypeScript limitation
-        const widgetReceiver: any = {
+        // 2. The Widget Receiver
+        const widgetReceiver = {
             $: { 
                 'android:name': 'expo.modules.soggywidget.SoggyWidgetReceiver', 
-                'android:exported': 'false' 
+                'android:exported': 'true' 
             },
             'intent-filter': [{ action: [{ $: { 'android:name': 'android.appwidget.action.APPWIDGET_UPDATE' } }] }],
             'meta-data': [{ 
@@ -27,6 +28,7 @@ const withSoggyWidget: ConfigPlugin = (config) => {
         };
         app.receiver.push(widgetReceiver);
 
+        // 3. The Alarm & Boot Receiver
         app.receiver.push({
             $: { 
                 'android:name': 'expo.modules.soggywidget.SoggyAlarmReceiver', 
@@ -45,4 +47,4 @@ const withSoggyWidget: ConfigPlugin = (config) => {
     });
 };
 
-export default withSoggyWidget;
+module.exports = withSoggyWidget;
