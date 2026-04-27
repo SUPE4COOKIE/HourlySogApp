@@ -7,7 +7,7 @@ import { storage, useDebugMode } from "@/storage/mmkv";
 import { clearImageCache } from "@/storage/Images";
 import DownloadBar from "@/components/downloadBar";
 import { useState, useEffect } from "react";
-import { updateSuperRandomWidget } from "@/widgets/SoggyWidget";
+import { syncSogsToWidget } from "@/widgets/NativeSoggyWidgetSync";
 import WidgetPlacedHeader from "@/components/widgetPlacedHeader";
 import BatteryOptimisationHeader from "@/components/batteryOptimisationHeader";
 import RNAlarmScheduler from 'react-native-alarm-scheduler';
@@ -96,10 +96,6 @@ export default function Index() {
       {isDebugEnabled && (
         <View style={styles.debugSection}>
           <Button title="Show image cache" onPress={cachedKeys.length == 0 ? showCache : hideCache} />
-
-          <TouchableOpacity onPress={updateSuperRandomWidget} style={styles.actionButton}>
-            <Text style={styles.actionButtonText}>Update SuperRandom Widget</Text>
-          </TouchableOpacity>
 
           <TouchableOpacity onPress={clearCache} style={styles.clearCacheButton}>
             <Text style={styles.clearCacheText}>Clear Cache</Text>

@@ -1,0 +1,1 @@
+int xml soggy_widget_info 0x0

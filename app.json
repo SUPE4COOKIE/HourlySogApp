@@ -40,25 +40,6 @@
             "backgroundColor": "#c0b080"
           }
         }
-      ],
-      [
-        "react-native-android-widget",
-        {
-          "widgets": [
-            {
-              "name": "SoggyCat",
-              "label": "Hourly Soggy Cat",
-              "minWidth": "110dp",
-              "minHeight": "180dp",
-              "targetCellWidth": 2,
-              "targetCellHeight": 3,
-              "resizeMode": "horizontal|vertical",
-              "description": "This is the soggy cat widget. It shows a random soggy cat every hour.",
-              "previewImage": "./assets/widget-preview/soggy.png",
-              "updatePeriodMillis": 1800000
-            }
-          ]
-        }
       ]
     ],
     "experiments": {

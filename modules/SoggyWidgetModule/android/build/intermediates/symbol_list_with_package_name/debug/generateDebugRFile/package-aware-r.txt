@@ -1,0 +1,2 @@
+expo.modules.soggywidget
+xml soggy_widget_info
