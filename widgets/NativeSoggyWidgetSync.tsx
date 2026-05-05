@@ -10,6 +10,6 @@ export const syncSogsToWidget = async () => {
 	  const uris = keys.map(key => new File(Paths.document, key).uri);
 
 	  // uses the native kotlin module !! (manage the whole widget and alarms)
-	  await SoggyWidgetModule.startWidgetLoop(uris);
+	  //await SoggyWidgetModule.startWidgetLoop(uris);
 	  console.log("Native widget loop started!");
 };

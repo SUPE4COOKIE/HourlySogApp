@@ -1,3 +1,5 @@
+
+
 package expo.modules.soggywidget
 
 import android.content.Context
@@ -23,6 +25,25 @@ import androidx.glance.layout.fillMaxSize
 import androidx.compose.ui.unit.dp
 import java.io.File
 
+
+class SoggyWidget : GlanceAppWidget() {
+    override suspend fun provideGlance(context: Context, id: GlanceId) {
+        provideContent {
+            // A simple red box with text. No image loading.
+            androidx.glance.layout.Box(
+                modifier = androidx.glance.GlanceModifier.fillMaxSize().background(androidx.compose.ui.graphics.Color.Red),
+                contentAlignment = androidx.glance.layout.Alignment.Center
+            ) {
+                androidx.glance.text.Text(
+                    text = "It works!",
+                    style = androidx.glance.text.TextStyle(color = androidx.glance.unit.ColorProvider(androidx.compose.ui.graphics.Color.White))
+                )
+            }
+        }
+    }
+}
+
+/*
 object SoggyPrefs {
 	// saved random image from the saved preferences, modified by the alarm receiver
 	val IMAGE_PATH = stringPreferencesKey("soggy_image_path")
@@ -61,3 +82,4 @@ class SoggyWidget : GlanceAppWidget() {
 		}
 	}
 }
+*/
