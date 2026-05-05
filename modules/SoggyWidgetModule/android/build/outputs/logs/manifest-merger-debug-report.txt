@@ -1,17 +1,17 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:2:1-4:12
-INJECTED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:2:1-4:12
+ADDED from D:\HourlySogApp\modules\SoggyWidgetModule\android\src\main\AndroidManifest.xml:2:1-4:12
+INJECTED from D:\HourlySogApp\modules\SoggyWidgetModule\android\src\main\AndroidManifest.xml:2:1-4:12
 	package
-		ADDED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:3:5-39
-		INJECTED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml
+		ADDED from D:\HourlySogApp\modules\SoggyWidgetModule\android\src\main\AndroidManifest.xml:3:5-39
+		INJECTED from D:\HourlySogApp\modules\SoggyWidgetModule\android\src\main\AndroidManifest.xml
 	xmlns:android
-		ADDED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml:2:11-69
+		ADDED from D:\HourlySogApp\modules\SoggyWidgetModule\android\src\main\AndroidManifest.xml:2:11-69
 uses-sdk
-INJECTED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml reason: use-sdk injection requested
-INJECTED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml
-INJECTED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml
+INJECTED from D:\HourlySogApp\modules\SoggyWidgetModule\android\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from D:\HourlySogApp\modules\SoggyWidgetModule\android\src\main\AndroidManifest.xml
+INJECTED from D:\HourlySogApp\modules\SoggyWidgetModule\android\src\main\AndroidManifest.xml
 	android:targetSdkVersion
-		INJECTED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml
+		INJECTED from D:\HourlySogApp\modules\SoggyWidgetModule\android\src\main\AndroidManifest.xml
 	android:minSdkVersion
-		INJECTED from /Users/supe4cookie/HourlySogApp/modules/SoggyWidgetModule/android/src/main/AndroidManifest.xml
+		INJECTED from D:\HourlySogApp\modules\SoggyWidgetModule\android\src\main\AndroidManifest.xml

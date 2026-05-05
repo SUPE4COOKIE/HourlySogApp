@@ -1,6 +1,5 @@
 import { Text, View, Button, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator, Switch } from "react-native";
 import { useUpdateSogs, checkForUpdate } from "@/hooks/updateSogs";
-import { useSetAlarmsOnLaunch } from "@/hooks/useAlarms";
 import { useHasWidget } from "@/hooks/useHasWidget";
 import { useBatteryOptimisation } from "@/hooks/useBatteryOptimisation";
 import { storage, useDebugMode } from "@/storage/mmkv";
@@ -10,7 +9,6 @@ import { useState, useEffect } from "react";
 import { syncSogsToWidget } from "@/widgets/NativeSoggyWidgetSync";
 import WidgetPlacedHeader from "@/components/widgetPlacedHeader";
 import BatteryOptimisationHeader from "@/components/batteryOptimisationHeader";
-import RNAlarmScheduler from 'react-native-alarm-scheduler';
 
 /*
 (checkforupdate -> if new images exist, show update button)
@@ -32,9 +30,11 @@ export default function Index() {
       console.log('[Index] checkForUpdate resolved:', result);
       setNeedUpdate(result);
     });
+    
+    // Sync to widget on launch to ensure images are picked up if they were updated in background
+    // or if the widget was placed but never synced.
+    syncSogsToWidget().catch(e => console.error("Failed to sync sogs on launch", e));
   }, []);
-
-  useSetAlarmsOnLaunch();
 
   const showCache = () => {
     setCachedKeys(storage.getAllKeys());
@@ -49,18 +49,6 @@ export default function Index() {
     setCachedKeys([]);
     setNeedUpdate(true);
   }
-
-  const getLocalISOString = (date: Date): string => {
-    const pad = (n: number) => n.toString().padStart(2, '0');
-    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
-  };
-
-  const getSoonISOString = (): string => {
-    const soonDate = new Date(Date.now() + 10_000);
-    const soon = getLocalISOString(soonDate);
-    console.log('Scheduling alarm for:', soon);
-    return soon;
-  };
 
   return (
     <ScrollView style={styles.container}>
@@ -99,15 +87,6 @@ export default function Index() {
 
           <TouchableOpacity onPress={clearCache} style={styles.clearCacheButton}>
             <Text style={styles.clearCacheText}>Clear Cache</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => RNAlarmScheduler.scheduleAlarm({
-            id: 'test-soon',
-            datetimeISO: getSoonISOString(),
-            title: 'Test',
-            body: '',
-          })} style={styles.actionButton}>
-            <Text style={styles.actionButtonText}>Schedule Alarm</Text>
           </TouchableOpacity>
 
           <ScrollView style={styles.cacheList}>

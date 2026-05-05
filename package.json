@@ -34,7 +34,6 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-native": "0.81.5",
-    "react-native-alarm-scheduler": "https://github.com/SUPE4COOKIE/react-native-alarm-scheduler",
     "react-native-gesture-handler": "~2.28.0",
     "react-native-mmkv": "^4.1.2",
     "react-native-nitro-modules": "^0.35.5",

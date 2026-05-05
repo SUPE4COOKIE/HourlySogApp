@@ -10,13 +10,14 @@ import android.util.Log
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.state.updateAppWidgetState
-import androidx.glance.appwidget.updateAll   // ← THIS was missing
+import androidx.glance.appwidget.updateAll
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Random
+import java.net.URLDecoder
 
 private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
@@ -45,44 +46,43 @@ class SoggyAlarmReceiver : BroadcastReceiver() {
         }
     }
 
-    private suspend fun updateWidgetNatively(context: Context) {
-        val prefs = context.getSharedPreferences("SoggyStorage", Context.MODE_PRIVATE)
-        val keysList = prefs.getStringSet("available_images", emptySet())
-            ?.sorted()
-            ?: return
-
-        if (keysList.isEmpty()) {
-            Log.d("SoggyAlarm", "No images found in SharedPreferences, skipping update")
-            return
-        }
-
-        val now = System.currentTimeMillis()
-        val msHour = 60 * 60 * 1000L
-        val roundedHour = (now / msHour) * msHour
-        val seededRandom = Random(roundedHour)
-        val randomIndex = seededRandom.nextInt(keysList.size)
-        val cleanPath = keysList[randomIndex].replace("file://", "")
-
-        Log.d("SoggyAlarm", "Updating widget with image: $cleanPath")
-
-        val manager = GlanceAppWidgetManager(context)
-        val glanceIds = manager.getGlanceIds(SoggyWidget::class.java)
-
-        if (glanceIds.isEmpty()) {
-            Log.d("SoggyAlarm", "No widget instances found on home screen, skipping")
-            return
-        }
-
-        glanceIds.forEach { id ->
-            updateAppWidgetState(context, id) { glancePrefs ->
-                glancePrefs[stringPreferencesKey("soggy_image_path")] = cleanPath
-            }
-        }
-        SoggyWidget().updateAll(context)
-        Log.d("SoggyAlarm", "Widget updated successfully")
-    }
-
     companion object {
+        suspend fun updateWidgetNatively(context: Context) {
+            val prefs = context.getSharedPreferences("SoggyStorage", Context.MODE_PRIVATE)
+            val keysList = prefs.getStringSet("available_images", emptySet())
+                ?.sorted()
+                ?: return
+
+            if (keysList.isEmpty()) {
+                Log.d("SoggyAlarm", "No images found in SharedPreferences, skipping update")
+                return
+            }
+
+            val now = System.currentTimeMillis()
+            val msHour = 60 * 60 * 1000L
+            val roundedHour = (now / msHour) * msHour
+            val seededRandom = Random(roundedHour)
+            val randomIndex = seededRandom.nextInt(keysList.size)
+            val cleanPath = java.net.URLDecoder.decode(keysList[randomIndex].replace("file://", ""), "UTF-8")
+			Log.d("SoggyAlarm", "Current time: ${now}, Rounded hour: ${roundedHour}, SeededRandom: ${seededRandom.nextInt()}, Keys available: ${keysList.size}, Selected index: ${randomIndex}, Clean path: ${cleanPath}")
+
+            val manager = GlanceAppWidgetManager(context)
+            val glanceIds = manager.getGlanceIds(SoggyWidget::class.java)
+
+            if (glanceIds.isEmpty()) {
+                Log.d("SoggyAlarm", "No widget instances found on home screen, skipping")
+                return
+            }
+
+            glanceIds.forEach { id ->
+                updateAppWidgetState(context, id) { glancePrefs ->
+                    glancePrefs[stringPreferencesKey("soggy_image_path")] = cleanPath
+                }
+            }
+            SoggyWidget().updateAll(context)
+            Log.d("SoggyAlarm", "Widget updated successfully")
+        }
+
         fun scheduleNextHourlyAlarm(context: Context) {
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             val intent = Intent(context, SoggyAlarmReceiver::class.java)

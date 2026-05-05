@@ -26,24 +26,9 @@ import androidx.compose.ui.unit.dp
 import java.io.File
 
 
-class SoggyWidget : GlanceAppWidget() {
-    override suspend fun provideGlance(context: Context, id: GlanceId) {
-        provideContent {
-            // A simple red box with text. No image loading.
-            androidx.glance.layout.Box(
-                modifier = androidx.glance.GlanceModifier.fillMaxSize().background(androidx.compose.ui.graphics.Color.Red),
-                contentAlignment = androidx.glance.layout.Alignment.Center
-            ) {
-                androidx.glance.text.Text(
-                    text = "It works!",
-                    style = androidx.glance.text.TextStyle(color = androidx.glance.unit.ColorProvider(androidx.compose.ui.graphics.Color.White))
-                )
-            }
-        }
-    }
-}
 
-/*
+import android.util.Log
+
 object SoggyPrefs {
 	// saved random image from the saved preferences, modified by the alarm receiver
 	val IMAGE_PATH = stringPreferencesKey("soggy_image_path")
@@ -64,22 +49,57 @@ class SoggyWidget : GlanceAppWidget() {
 				contentAlignment = Alignment.Center
 			) {
 				if (imagePath != null) {
+					Log.d("SoggyWidget", "Found imagePath in prefs: $imagePath")
 					val file = File(imagePath)
 					if (file.exists()) {
-						// save the file in a bitmap to feed the Image to the widget
-						val bitmap = BitmapFactory.decodeFile(file.absolutePath)
+						Log.d("SoggyWidget", "File exists: ${file.absolutePath}")
+						
+						// App Widgets have strict memory limits for images (part of Binder Transaction limits).
+						// We need to scale the bitmap down. 500x500 is a safe maximum for widgets.
+						val options = BitmapFactory.Options()
+						options.inJustDecodeBounds = true
+						BitmapFactory.decodeFile(file.absolutePath, options)
+						
+						val reqWidth = 500
+						val reqHeight = 500
+						var inSampleSize = 1
+						
+						if (options.outHeight > reqHeight || options.outWidth > reqWidth) {
+							val halfHeight: Int = options.outHeight / 2
+							val halfWidth: Int = options.outWidth / 2
+							while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
+								inSampleSize *= 2
+							}
+						}
+						
+						options.inJustDecodeBounds = false
+						options.inSampleSize = inSampleSize
+						
+						val bitmap = BitmapFactory.decodeFile(file.absolutePath, options)
 						if (bitmap != null) {
+							Log.d("SoggyWidget", "Successfully decoded and scaled bitmap to size: ${bitmap.width}x${bitmap.height}")
 							Image(
 								provider = ImageProvider(bitmap),
 								contentDescription = "Soggy Cat",
 								contentScale = ContentScale.Fit,
 								modifier = GlanceModifier.fillMaxSize()
 							)
+						} else {
+							Log.e("SoggyWidget", "Failed to decode bitmap from ${file.absolutePath}")
 						}
+					} else {
+						Log.e("SoggyWidget", "File does not exist: ${file.absolutePath}")
 					}
+				} else {
+					Log.d("SoggyWidget", "imagePath in prefs is null, using fallback image")
+					Image(
+						provider = ImageProvider(R.drawable.undownloaded),
+						contentDescription = "Soggy Cat",
+						contentScale = ContentScale.Fit,
+						modifier = GlanceModifier.fillMaxSize()
+					)
 				}
 			}
 		}
 	}
 }
-*/
