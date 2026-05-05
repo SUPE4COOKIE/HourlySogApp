@@ -5,10 +5,12 @@ import SoggyWidgetModule from '@/modules/SoggyWidgetModule';
 
 export const syncSogsToWidget = async () => {
     const keys = storage.getAllKeys();
-	  if (keys.length === 0) return;
-
 	  const uris = keys.map(key => new File(Paths.document, key).uri);
 
-	  // uses the native kotlin module !! (manage the whole widget and alarms)
-	  await SoggyWidgetModule.startWidgetLoop(uris);
+	  try {
+	      // uses the native kotlin module !! (manage the whole widget and alarms)
+	      await SoggyWidgetModule.startWidgetLoop(uris);
+	  } catch (e) {
+	      console.error("Failed to start widget loop:", e);
+	  }
 };

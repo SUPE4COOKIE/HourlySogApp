@@ -31,8 +31,6 @@ export default function Index() {
       setNeedUpdate(result);
     });
     
-    // Sync to widget on launch to ensure images are picked up if they were updated in background
-    // or if the widget was placed but never synced.
     syncSogsToWidget().catch(e => console.error("Failed to sync sogs on launch", e));
   }, []);
 
@@ -48,6 +46,7 @@ export default function Index() {
     clearImageCache();
     setCachedKeys([]);
     setNeedUpdate(true);
+	syncSogsToWidget().catch(e => console.error("Failed to sync sogs on launch", e));
   }
 
   return (
@@ -87,6 +86,10 @@ export default function Index() {
 
           <TouchableOpacity onPress={clearCache} style={styles.clearCacheButton}>
             <Text style={styles.clearCacheText}>Clear Cache</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => syncSogsToWidget()} style={styles.actionButton}>
+            <Text style={styles.actionButtonText}>Force Widget Update</Text>
           </TouchableOpacity>
 
           <ScrollView style={styles.cacheList}>

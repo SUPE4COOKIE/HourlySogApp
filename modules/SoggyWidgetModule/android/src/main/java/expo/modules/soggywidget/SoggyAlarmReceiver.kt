@@ -53,18 +53,19 @@ class SoggyAlarmReceiver : BroadcastReceiver() {
                 ?.sorted()
                 ?: return
 
-            if (keysList.isEmpty()) {
-                Log.d("SoggyAlarm", "No images found in SharedPreferences, skipping update")
-                return
+            val cleanPath = if (keysList.isEmpty()) {
+                Log.d("SoggyAlarm", "No images found in SharedPreferences, clearing image path")
+                null
+            } else {
+                val now = System.currentTimeMillis()
+                val msHour = 60 * 60 * 1000L
+                val roundedHour = (now / msHour) * msHour
+                val seededRandom = Random(roundedHour)
+                val randomIndex = seededRandom.nextInt(keysList.size)
+                val generatedPath = java.net.URLDecoder.decode(keysList[randomIndex].replace("file://", ""), "UTF-8")
+                Log.d("SoggyAlarm", "Current time: ${now}, Rounded hour: ${roundedHour}, SeededRandom: ${seededRandom.nextInt()}, Keys available: ${keysList.size}, Selected index: ${randomIndex}, Clean path: ${generatedPath}")
+                generatedPath
             }
-
-            val now = System.currentTimeMillis()
-            val msHour = 60 * 60 * 1000L
-            val roundedHour = (now / msHour) * msHour
-            val seededRandom = Random(roundedHour)
-            val randomIndex = seededRandom.nextInt(keysList.size)
-            val cleanPath = java.net.URLDecoder.decode(keysList[randomIndex].replace("file://", ""), "UTF-8")
-			Log.d("SoggyAlarm", "Current time: ${now}, Rounded hour: ${roundedHour}, SeededRandom: ${seededRandom.nextInt()}, Keys available: ${keysList.size}, Selected index: ${randomIndex}, Clean path: ${cleanPath}")
 
             val manager = GlanceAppWidgetManager(context)
             val glanceIds = manager.getGlanceIds(SoggyWidget::class.java)
@@ -76,7 +77,11 @@ class SoggyAlarmReceiver : BroadcastReceiver() {
 
             glanceIds.forEach { id ->
                 updateAppWidgetState(context, id) { glancePrefs ->
-                    glancePrefs[stringPreferencesKey("soggy_image_path")] = cleanPath
+                    if (cleanPath == null) {
+                        glancePrefs.remove(stringPreferencesKey("soggy_image_path"))
+                    } else {
+                        glancePrefs[stringPreferencesKey("soggy_image_path")] = cleanPath
+                    }
                 }
             }
             SoggyWidget().updateAll(context)
