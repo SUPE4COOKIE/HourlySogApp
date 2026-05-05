@@ -1,3 +1,0 @@
-expo.modules.soggywidget
-drawable undownloaded
-xml soggy_widget_info
